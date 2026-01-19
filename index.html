@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
@@ -75,7 +75,6 @@
     .btn.ghost{background:transparent; box-shadow:none; border:1px solid rgba(0,0,0,.10)}
     .btn:disabled{opacity:.65; cursor:not-allowed}
 
-    /* ✅ شريط الحالة (مفتوح/مغلق + ساعات العمل) */
     .statusbar{
       display:flex;
       gap:10px;
@@ -273,7 +272,6 @@
         </div>
       </div>
 
-      <!-- ✅ حالة المحل -->
       <div class="statusbar">
         <span id="openBadge" class="badge">
           <span class="dot"></span>
@@ -297,7 +295,6 @@
           <h3 id="cartTitle">السلة</h3>
           <div id="cartItems" class="cart-items"></div>
 
-          <!-- ✅ Totals -->
           <div class="totals-row">
             <span id="subTotalLabel">المجموع الفرعي</span>
             <span id="subTotalValue">0.00</span>
@@ -324,7 +321,7 @@
             </div>
 
             <div class="field">
-              <label id="phoneLabel" for="custPhone">رقم الهاتف (اختياري)</label>
+              <label id="phoneLabel" for="custPhone">رقم الهاتف</label>
               <input id="custPhone" type="tel" placeholder="06xxxxxxxx" />
             </div>
 
@@ -341,15 +338,10 @@
             <button class="btn ghost" id="getAddrBtn" type="button">📍 <span id="getAddrText">جلب العنوان</span></button>
             <div class="hint" id="locHint">قد يطلب المتصفح الإذن للوصول للموقع.</div>
 
-            <!-- ✅ طباعة عادية -->
             <button class="btn ghost" id="printInvoice" type="button">🖨️ <span id="printText">طباعة الفاتورة</span></button>
-
-            <!-- ✅ طباعة عبر البلوتوث -->
             <button class="btn ghost" id="btPrintInvoice" type="button">🧾📶 <span id="btPrintText">طباعة عبر البلوتوث</span></button>
-            <div class="hint" id="btHint">تشتغل غالباً على Chrome Android مع طابعة حرارية ESC/POS و HTTPS.</div>
 
             <button class="btn good" id="sendWhatsApp" type="button">📲 <span id="sendText">إرسال الطلب عبر واتساب</span></button>
-            <div class="hint" id="sendHint">سيتم إنشاء رسالة جاهزة تحتوي على المنتجات والكميات والإجمالي.</div>
 
             <div class="hint" id="closedHint" style="display:none;color:#b00;font-weight:800">
               المتجر مغلق حالياً. لا يمكن إرسال الطلب الآن.
@@ -367,26 +359,18 @@
   </footer>
 
   <script>
-    /***********************
-     * إعدادات سريعة
-     ***********************/
     const WHATSAPP_NUMBER = "212600000000";
     const CURRENCY_AR = "درهم";
     const CURRENCY_EN = "MAD";
 
-    // ✅ إذا بغيت تُظهر خيار الاستلام مستقبلاً: خليه true
-    const ENABLE_PICKUP = false;
-
-    // ✅ رسوم توصيل افتراضية
     const DEFAULT_DELIVERY_FEE = 10;
 
-    // ✅ ساعات العمل
-    // ملاحظة: قلت "من الأحد إلى الإثنين" = أيام [الأحد=0, الإثنين=1]
-    // إذا قصدك كل أيام الأسبوع: خليه [0,1,2,3,4,5,6]
+    // ✅ ساعات العمل: الأحد والاثنين فقط
+    // ملاحظة: 12:00 إلى 00:00 (يمتد لمنتصف الليل)
     const BUSINESS = {
-      open:  { h: 12, m: 0 },  // 12:00 (غالباً ظهر)
-      close: { h: 0,  m: 0 },  // 00:00
-      days:  [0, 1]            // Sunday, Monday
+      open:  { h: 12, m: 0 },
+      close: { h: 0,  m: 0 },
+      days:  [0, 1] // Sunday, Monday
     };
 
     const i18n = {
@@ -410,12 +394,11 @@
         deliveryFeeHint: "يمكنك تغييرها حسب المدينة/المسافة.",
 
         nameLabel: "الاسم",
-        phoneLabel: "رقم الهاتف (اختياري)",
+        phoneLabel: "رقم الهاتف",
         addrLabel: "العنوان",
         notesLabel: "ملاحظات (اختياري)",
 
         sendText: "إرسال الطلب عبر واتساب",
-        sendHint: "سيتم إنشاء رسالة جاهزة تحتوي على المنتجات والكميات والإجمالي.",
         clearText: "تفريغ السلة",
         addBtn: "أضف للسلة",
         categoryAll: "الكل",
@@ -425,13 +408,12 @@
 
         printText: "طباعة الفاتورة",
         btPrintText: "طباعة عبر البلوتوث",
-        btHint: "تشتغل غالباً على Chrome Android مع طابعة حرارية ESC/POS و HTTPS.",
         bt: {
-          unsupported: "الطباعة عبر البلوتوث غير مدعومة في هذا المتصفح. جرب Chrome على Android.",
-          needHttps: "خاص الموقع يكون HTTPS باش يخدم Web Bluetooth (GitHub Pages كافيه).",
+          unsupported: "الطباعة عبر البلوتوث غير مدعومة في هذا المتصفح.",
+          needHttps: "خاص الموقع يكون HTTPS باش يخدم Web Bluetooth.",
           connecting: "جارٍ الاتصال بالطابعة...",
           connected: "تم الاتصال بالطابعة ✅",
-          failed: "تعذر الاتصال بالطابعة. تأكد من تشغيل البلوتوث والطابعة.",
+          failed: "تعذر الاتصال بالطابعة.",
           printed: "تم إرسال الفاتورة للطابعة ✅"
         },
 
@@ -446,6 +428,7 @@
         validations: {
           needItems: "أضف منتجات للسلة أولاً.",
           needName: "اكتب اسمك من فضلك.",
+          needPhone: "رقم الهاتف إجباري.",
           needAddress: "اكتب العنوان من فضلك.",
           closed: "المتجر مغلق حالياً. لا يمكن إرسال الطلب الآن."
         },
@@ -484,12 +467,11 @@
         deliveryFeeHint: "Adjust based on distance/city.",
 
         nameLabel: "Name",
-        phoneLabel: "Phone (optional)",
+        phoneLabel: "Phone",
         addrLabel: "Address",
         notesLabel: "Notes (optional)",
 
         sendText: "Send order via WhatsApp",
-        sendHint: "A ready message will include items, quantities, and total.",
         clearText: "Clear cart",
         addBtn: "Add to cart",
         categoryAll: "All",
@@ -499,13 +481,12 @@
 
         printText: "Print invoice",
         btPrintText: "Print via Bluetooth",
-        btHint: "Works mostly on Chrome Android with ESC/POS thermal printers and HTTPS.",
         bt: {
-          unsupported: "Bluetooth printing is not supported in this browser. Try Chrome on Android.",
-          needHttps: "Web Bluetooth requires HTTPS (GitHub Pages is fine).",
+          unsupported: "Bluetooth printing is not supported in this browser.",
+          needHttps: "Web Bluetooth requires HTTPS.",
           connecting: "Connecting to printer...",
           connected: "Printer connected ✅",
-          failed: "Couldn't connect. Make sure Bluetooth and printer are on.",
+          failed: "Couldn't connect to printer.",
           printed: "Invoice sent to printer ✅"
         },
 
@@ -520,6 +501,7 @@
         validations: {
           needItems: "Please add items to the cart first.",
           needName: "Please enter your name.",
+          needPhone: "Phone number is required.",
           needAddress: "Please enter your address.",
           closed: "We are currently closed. You can't place an order now."
         },
@@ -540,14 +522,7 @@
       }
     };
 
-    /***********************
-     * ✅ products: التصنيفات تتولد أوتوماتيكياً من هنا
-     * لإضافة تصنيف جديد:
-     * - استعمل cat جديدة (مثلا: "pizza_house")
-     * - وخلي أول منتج فيه catLabel {ar,en}
-     ***********************/
     const products = [
-      // مغربي
       { id:"m1", cat:"moroccan", catLabel:{ar:"مغربي", en:"Moroccan"}, price:35,
         img:"https://images.unsplash.com/photo-1541518763669-27fef04b14ea?auto=format&fit=crop&w=900&q=70",
         name:{ar:"طاجين دجاج", en:"Chicken Tagine"},
@@ -557,7 +532,6 @@
         name:{ar:"كسكس", en:"Couscous"},
         desc:{ar:"كسكس بالخضر والمرق", en:"Couscous with vegetables"} },
 
-      // إيطالي
       { id:"i1", cat:"italian", catLabel:{ar:"إيطالي", en:"Italian"}, price:45,
         img:"https://images.unsplash.com/photo-1521389508051-d7ffb5dc8ff7?auto=format&fit=crop&w=900&q=70",
         name:{ar:"بيتزا مارغريتا", en:"Margherita Pizza"},
@@ -567,7 +541,6 @@
         name:{ar:"باستا ألفريدو", en:"Alfredo Pasta"},
         desc:{ar:"صلصة كريمية وجبن", en:"Creamy sauce & cheese"} },
 
-      // أمريكي
       { id:"a1", cat:"american", catLabel:{ar:"أمريكي", en:"American"}, price:50,
         img:"https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=900&q=70",
         name:{ar:"برغر لحم", en:"Beef Burger"},
@@ -577,7 +550,6 @@
         name:{ar:"دجاج مقرمش", en:"Crispy Chicken"},
         desc:{ar:"قطع دجاج مقرمشة", en:"Crispy chicken bites"} },
 
-      // هندي
       { id:"h1", cat:"indian", catLabel:{ar:"هندي", en:"Indian"}, price:55,
         img:"https://images.unsplash.com/photo-1604908176997-125f25cc5002?auto=format&fit=crop&w=900&q=70",
         name:{ar:"دجاج تيكا ماسالا", en:"Chicken Tikka Masala"},
@@ -587,29 +559,21 @@
         name:{ar:"نان", en:"Naan Bread"},
         desc:{ar:"خبز هندي طري", en:"Soft Indian bread"} },
 
-      // مشروبات غازية
       { id:"s1", cat:"soda", catLabel:{ar:"مشروبات غازية", en:"Soda"}, price:10,
         img:"https://images.unsplash.com/photo-1543253687-c931c8e01820?auto=format&fit=crop&w=900&q=70",
         name:{ar:"مشروب غازي", en:"Soda"},
         desc:{ar:"علبة 330ml", en:"Can 330ml"} },
 
-      // مياه
       { id:"w1", cat:"water", catLabel:{ar:"مياه", en:"Water"}, price:6,
         img:"https://images.unsplash.com/photo-1528825871115-3581a5387919?auto=format&fit=crop&w=900&q=70",
         name:{ar:"ماء معدني", en:"Mineral Water"},
         desc:{ar:"قارورة 500ml", en:"Bottle 500ml"} }
     ];
 
-    /***********************
-     * حالة التطبيق
-     ***********************/
     let lang = "ar";
     let activeCat = "all";
-    const cart = new Map(); // id -> qty
+    const cart = new Map();
 
-    /***********************
-     * عناصر الصفحة
-     ***********************/
     const el = (id) => document.getElementById(id);
 
     const productsGrid = el("productsGrid");
@@ -635,7 +599,6 @@
 
     const printBtn = el("printInvoice");
     const btPrintBtn = el("btPrintInvoice");
-    const btHint = el("btHint");
 
     const closedHint = el("closedHint");
 
@@ -646,10 +609,8 @@
     const custAddr = el("custAddr");
     const custNotes = el("custNotes");
 
-    /***********************
-     * LocalStorage
-     ***********************/
-    const LS_KEY = "siymon_cart_v3";
+    const LS_KEY = "siymon_cart_v4";
+
     function saveCart(){
       const obj = {
         lang,
@@ -693,17 +654,12 @@
       }catch(e){}
     }
 
-    /***********************
-     * Helpers
-     ***********************/
     function money(v){
       const num = Number(v || 0);
       return num.toFixed(2) + " " + (lang==="ar" ? CURRENCY_AR : CURRENCY_EN);
     }
 
-    function getProduct(id){
-      return products.find(p => p.id === id);
-    }
+    function getProduct(id){ return products.find(p => p.id === id); }
 
     function cartSubTotal(){
       let total = 0;
@@ -729,34 +685,24 @@
       return c;
     }
 
-    function pad2(n){ return String(n).padStart(2, "0"); }
-
-    /***********************
-     * ✅ ساعات العمل
-     ***********************/
     function isBusinessOpen(now = new Date()){
-      const day = now.getDay(); // 0..6 (Sun..Sat)
+      const day = now.getDay();
       const minutesNow = now.getHours()*60 + now.getMinutes();
 
       const openMin  = BUSINESS.open.h*60  + BUSINESS.open.m;
       const closeMin = BUSINESS.close.h*60 + BUSINESS.close.m;
 
       const overnight = closeMin <= openMin;
-
-      // تحقق من اليوم المعتمد
       const isDayAllowed = (d) => BUSINESS.days.includes(d);
 
       if(!overnight){
         return isDayAllowed(day) && minutesNow >= openMin && minutesNow < closeMin;
       }
 
-      // overnight case (مثلاً 12:00 -> 00:00)
-      // إذا الوقت قبل closeMin فهو تابع لليوم السابق
       if(minutesNow < closeMin){
         const prevDay = (day + 6) % 7;
         return isDayAllowed(prevDay);
       }
-      // بعد openMin تابع لليوم الحالي
       return isDayAllowed(day) && minutesNow >= openMin;
     }
 
@@ -768,14 +714,10 @@
       openText.textContent = open ? i18n[lang].openNow : i18n[lang].closedNow;
       hoursText.textContent = i18n[lang].hoursText;
 
-      // منع إرسال الطلب إذا مغلق
       sendBtn.disabled = !open;
       closedHint.style.display = open ? "none" : "block";
     }
 
-    /***********************
-     * Rendering + i18n
-     ***********************/
     function applyI18n(){
       document.documentElement.lang = lang;
       document.documentElement.dir = i18n[lang].dir;
@@ -798,21 +740,17 @@
       el("notesLabel").textContent = i18n[lang].notesLabel;
 
       el("sendText").textContent = i18n[lang].sendText;
-      el("sendHint").textContent = i18n[lang].sendHint;
-
       el("getAddrText").textContent = i18n[lang].getAddrText;
       locHint.textContent = i18n[lang].locHint;
 
       el("printText").textContent = i18n[lang].printText;
       el("btPrintText").textContent = i18n[lang].btPrintText;
-      btHint.textContent = i18n[lang].btHint;
 
       el("clearText").textContent = i18n[lang].clearText;
       el("footerText").textContent = i18n[lang].footer;
 
       langToggle.textContent = (lang === "ar") ? "EN" : "AR";
 
-      // placeholders
       custName.placeholder = (lang==="ar") ? "مثال: محمد" : "e.g. John";
       custPhone.placeholder = (lang==="ar") ? "06xxxxxxxx" : "Phone number";
       custAddr.placeholder = (lang==="ar") ? "المدينة، الحي..." : "City, street...";
@@ -821,15 +759,11 @@
       updateOpenStatus();
     }
 
-    /***********************
-     * ✅ توليد التصنيفات أوتوماتيكياً من products
-     ***********************/
     function buildCategoriesFromProducts(){
-      const map = new Map(); // cat -> {ar,en}
+      const map = new Map();
       for(const p of products){
         if(!p?.cat) continue;
         if(map.has(p.cat)) continue;
-
         const label = p.catLabel || { ar: p.cat, en: p.cat };
         map.set(p.cat, label);
       }
@@ -934,7 +868,6 @@
         });
       }
 
-      // totals
       const sub = cartSubTotal();
       const fee = getDeliveryFee();
       const grand = cartGrandTotal();
@@ -945,7 +878,6 @@
 
       cartCount.textContent = String(cartItemsCount());
 
-      // enable/disable print
       printBtn.disabled = (cart.size === 0);
       btPrintBtn.disabled = (cart.size === 0);
 
@@ -959,9 +891,6 @@
       renderCart();
     }
 
-    /***********************
-     * Cart ops
-     ***********************/
     function addToCart(id, delta){
       const p = getProduct(id);
       if(!p) return;
@@ -982,9 +911,6 @@
       saveCart();
     }
 
-    /***********************
-     * ✅ جلب العنوان تلقائياً (Geolocation + Nominatim)
-     ***********************/
     async function getLocation(){
       if(!navigator.geolocation){
         alert(i18n[lang].geo.unsupported);
@@ -1028,28 +954,37 @@
       }, { enableHighAccuracy:true, timeout:10000, maximumAge:0 });
     }
 
-    /***********************
-     * WhatsApp message
-     ***********************/
-    function buildWhatsAppMessage(){
-      const tr = i18n[lang].msg;
+    function validateOrderBasics(){
+      if(!isBusinessOpen(new Date())) return i18n[lang].validations.closed;
 
-      if(!isBusinessOpen(new Date())) return { error: i18n[lang].validations.closed };
+      const name = custName.value.trim();
+      const phone = custPhone.value.trim();
+      const addr = custAddr.value.trim();
+
+      if(cart.size === 0) return i18n[lang].validations.needItems;
+      if(!name) return i18n[lang].validations.needName;
+      if(!phone) return i18n[lang].validations.needPhone;
+      if(!addr) return i18n[lang].validations.needAddress;
+
+      return null;
+    }
+
+    function buildWhatsAppMessage(){
+      const err = validateOrderBasics();
+      if(err) return { error: err };
+
+      const tr = i18n[lang].msg;
 
       const name = custName.value.trim();
       const phone = custPhone.value.trim();
       const addr = custAddr.value.trim();
       const notes = custNotes.value.trim();
 
-      if(cart.size === 0) return { error: i18n[lang].validations.needItems };
-      if(!name) return { error: i18n[lang].validations.needName };
-      if(!addr) return { error: i18n[lang].validations.needAddress };
-
       const lines = [];
       lines.push(`🧾 ${tr.header}`);
       lines.push(`----------------------`);
       lines.push(`👤 ${tr.customer}: ${name}`);
-      if(phone) lines.push(`📞 ${tr.phone}: ${phone}`);
+      lines.push(`📞 ${tr.phone}: ${phone}`);
       lines.push(`📍 ${tr.address}: ${addr}`);
       if(notes) lines.push(`📝 ${tr.notes}: ${notes}`);
       lines.push(`----------------------`);
@@ -1085,10 +1020,10 @@
       window.open(url, "_blank");
     }
 
-    /***********************
-     * ✅ طباعة عادية (نافذة طباعة)
-     ***********************/
     function buildInvoiceHTML(){
+      const err = validateOrderBasics();
+      if(err) return { error: err };
+
       const tr = i18n[lang].msg;
       const now = new Date();
       const dateStr = now.toLocaleString(lang === "ar" ? "ar-MA" : "en-US");
@@ -1116,7 +1051,7 @@
         `;
       }).join("");
 
-      return `
+      const html = `
 <!doctype html>
 <html lang="${lang}" dir="${i18n[lang].dir}">
 <head>
@@ -1150,9 +1085,9 @@
   </div>
 
   <div class="box">
-    <div><b>${tr.customer}:</b> ${name || "-"}</div>
-    <div><b>${tr.phone}:</b> ${phone || "-"}</div>
-    <div><b>${tr.address}:</b> ${addr || "-"}</div>
+    <div><b>${tr.customer}:</b> ${name}</div>
+    <div><b>${tr.phone}:</b> ${phone}</div>
+    <div><b>${tr.address}:</b> ${addr}</div>
     <div><b>${tr.notes}:</b> ${notes || "-"}</div>
   </div>
 
@@ -1178,30 +1113,32 @@
 </body>
 </html>
       `.trim();
+
+      return { html };
     }
 
     function printInvoice(){
-      if(cart.size === 0){
-        alert(i18n[lang].validations.needItems);
+      const res = buildInvoiceHTML();
+      if(res.error){
+        alert(res.error);
         return;
       }
-      const html = buildInvoiceHTML();
       const w = window.open("", "_blank");
       if(!w){
-        alert(lang==="ar" ? "المتصفح منع نافذة الطباعة. اسمح بالنوافذ المنبثقة." : "Popup blocked. Please allow popups.");
+        alert(lang==="ar" ? "المتصفح منع نافذة الطباعة." : "Popup blocked.");
         return;
       }
       w.document.open();
-      w.document.write(html);
+      w.document.write(res.html);
       w.document.close();
     }
 
-    /***********************
-     * ✅ Bluetooth ESC/POS printing (Web Bluetooth)
-     ***********************/
     let printerChar = null;
 
     function buildInvoiceTextPlain(){
+      const err = validateOrderBasics();
+      if(err) return { error: err };
+
       const tr = i18n[lang].msg;
       const now = new Date();
       const dateStr = now.toLocaleString(lang === "ar" ? "ar-MA" : "en-US");
@@ -1219,9 +1156,9 @@
       lines.push("siymon");
       lines.push(dateStr);
       lines.push("------------------------------");
-      lines.push(`${tr.customer}: ${name || "-"}`);
-      if(phone) lines.push(`${tr.phone}: ${phone}`);
-      lines.push(`${tr.address}: ${addr || "-"}`);
+      lines.push(`${tr.customer}: ${name}`);
+      lines.push(`${tr.phone}: ${phone}`);
+      lines.push(`${tr.address}: ${addr}`);
       if(notes) lines.push(`${tr.notes}: ${notes}`);
       lines.push("------------------------------");
       lines.push(tr.items + ":");
@@ -1239,21 +1176,20 @@
       lines.push(`${tr.total}: ${money(grand)}`);
       lines.push("------------------------------");
       lines.push(tr.thanks);
-      lines.push("\n\n\n"); // feed paper
+      lines.push("\n\n\n");
 
-      return lines.join("\n");
+      return { text: lines.join("\n") };
     }
 
     function escposBytes(text){
-      const enc = new TextEncoder(); // UTF-8
-      const init = new Uint8Array([0x1B,0x40]);              // ESC @
-      const alignCenter = new Uint8Array([0x1B,0x61,0x01]);  // ESC a 1
-      const alignLeft = new Uint8Array([0x1B,0x61,0x00]);    // ESC a 0
-      const boldOn = new Uint8Array([0x1B,0x45,0x01]);       // ESC E 1
-      const boldOff = new Uint8Array([0x1B,0x45,0x00]);      // ESC E 0
-      const cut = new Uint8Array([0x1D,0x56,0x01,0x00]);     // GS V 1 0 (may be ignored)
+      const enc = new TextEncoder();
+      const init = new Uint8Array([0x1B,0x40]);
+      const alignCenter = new Uint8Array([0x1B,0x61,0x01]);
+      const alignLeft = new Uint8Array([0x1B,0x61,0x00]);
+      const boldOn = new Uint8Array([0x1B,0x45,0x01]);
+      const boldOff = new Uint8Array([0x1B,0x45,0x00]);
+      const cut = new Uint8Array([0x1D,0x56,0x01,0x00]);
 
-      // Header bold/center
       const parts = [];
       parts.push(init);
       parts.push(alignCenter);
@@ -1262,11 +1198,8 @@
       parts.push(boldOff);
       parts.push(alignLeft);
       parts.push(enc.encode(text));
-
-      // Cut (optional)
       parts.push(cut);
 
-      // concat
       let totalLen = 0;
       for(const p of parts) totalLen += p.length;
 
@@ -1280,7 +1213,6 @@
     }
 
     async function writeChunks(characteristic, data){
-      // أغلب الطابعات كتقبل chunks صغار
       const chunkSize = 180;
       for(let i=0;i<data.length;i+=chunkSize){
         const chunk = data.slice(i, i+chunkSize);
@@ -1289,7 +1221,6 @@
         }else{
           await characteristic.writeValue(chunk);
         }
-        // delay بسيط
         await new Promise(r=>setTimeout(r, 30));
       }
     }
@@ -1302,11 +1233,10 @@
         throw new Error("NEED_HTTPS");
       }
 
-      // أشهر UUIDs لطابعات حرارية ESC/POS
       const knownServices = [
         "0000ffe0-0000-1000-8000-00805f9b34fb",
         "0000ff00-0000-1000-8000-00805f9b34fb",
-        "49535343-fe7d-4ae5-8fa9-9fafd205e455" // IAI/Printer common
+        "49535343-fe7d-4ae5-8fa9-9fafd205e455"
       ];
 
       const device = await navigator.bluetooth.requestDevice({
@@ -1316,7 +1246,6 @@
 
       const server = await device.gatt.connect();
 
-      // محاولة إيجاد characteristic قابلة للكتابة
       const tryService = async (svcUuid) => {
         try{
           const svc = await server.getPrimaryService(svcUuid);
@@ -1333,7 +1262,6 @@
         if(ch) return ch;
       }
 
-      // fallback: استعراض جميع الخدمات
       const services = await server.getPrimaryServices();
       for(const svc of services){
         const chars = await svc.getCharacteristics();
@@ -1346,8 +1274,9 @@
     }
 
     async function btPrintInvoice(){
-      if(cart.size === 0){
-        alert(i18n[lang].validations.needItems);
+      const inv = buildInvoiceTextPlain();
+      if(inv.error){
+        alert(inv.error);
         return;
       }
 
@@ -1358,14 +1287,12 @@
 
         if(!printerChar){
           printerChar = await connectBluetoothPrinter();
-          btHint.textContent = i18n[lang].bt.connected;
+          // لا نعرض أي جملة إضافية هنا
         }
 
-        const plain = buildInvoiceTextPlain();
-        const bytes = escposBytes(plain);
+        const bytes = escposBytes(inv.text);
         await writeChunks(printerChar, bytes);
 
-        btHint.textContent = i18n[lang].bt.printed;
         el("btPrintText").textContent = old;
         btPrintBtn.disabled = false;
       }catch(err){
@@ -1382,9 +1309,16 @@
       }
     }
 
-    /***********************
-     * Events
-     ***********************/
+    function sendToWhatsApp(){
+      const msg = buildWhatsAppMessage();
+      if(msg.error){
+        alert(msg.error);
+        return;
+      }
+      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg.text)}`;
+      window.open(url, "_blank");
+    }
+
     langToggle.addEventListener("click", ()=>{
       lang = (lang === "ar") ? "en" : "ar";
       renderAll();
@@ -1411,19 +1345,11 @@
       input.addEventListener("input", ()=> saveCart());
     });
 
-    /***********************
-     * Init
-     ***********************/
     loadCart();
-
-    // قيمة افتراضية للرسوم إذا خالية
     if(!deliveryFeeInput.value) deliveryFeeInput.value = String(DEFAULT_DELIVERY_FEE);
 
     renderAll();
-
-    // تحديث حالة مفتوح/مغلق كل دقيقة
     setInterval(()=> updateOpenStatus(), 60_000);
   </script>
 </body>
 </html>
-
