@@ -3,7 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>siymon | صفحة هبوط لطلب الطعام</title>
+  <title>siymon</title>
+
+  <!-- ✅ PWA -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#ff5722">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="siymon">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
 
   <style>
     :root{
@@ -16,6 +24,43 @@
       --shadow:0 6px 18px rgba(0,0,0,.10);
       --radius:16px;
     }
+
+    /* ✅ Dark Theme */
+    html[data-theme="dark"]{
+      --bg:#0f0f10;
+      --card:#17181a;
+      --text:#f2f2f2;
+      --muted:#b8b8b8;
+      --shadow:0 10px 25px rgba(0,0,0,.45);
+    }
+    html[data-theme="dark"] header{
+      background:rgba(15,15,16,.92);
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    html[data-theme="dark"] .btn.ghost{ border:1px solid rgba(255,255,255,.12); }
+    html[data-theme="dark"] .chip{ border:1px solid rgba(255,255,255,.12); }
+    html[data-theme="dark"] .badge,
+    html[data-theme="dark"] .chip,
+    html[data-theme="dark"] .btn{
+      background:var(--card);
+      color:var(--text);
+    }
+    html[data-theme="dark"] .field input,
+    html[data-theme="dark"] .field textarea{
+      background:var(--card);
+      color:var(--text);
+      border:1px solid rgba(255,255,255,.14);
+    }
+    html[data-theme="dark"] .cart-item{
+      background:var(--card);
+      border:1px solid rgba(255,255,255,.10);
+    }
+    html[data-theme="dark"] .qty button{
+      background:var(--card);
+      color:var(--text);
+      border:1px solid rgba(255,255,255,.14);
+    }
+
     *{box-sizing:border-box}
     body{
       margin:0;
@@ -34,14 +79,16 @@
 
     .wrap{width:min(1150px, 92%); margin:auto}
 
+    /* ✅ Topbar = Brand | Social | Actions */
     .topbar{
-      display:flex; align-items:center; justify-content:space-between;
+      display:grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items:center;
       padding:14px 0;
       gap:12px;
-      flex-wrap:wrap;
     }
 
-    .brand{display:flex; align-items:center; gap:12px;}
+    .brand{display:flex; align-items:center; gap:12px; justify-self:start;}
     .logo-img{
       width:50px;
       height:50px;
@@ -54,7 +101,7 @@
     .brand h1{margin:0; font-size:20px; letter-spacing:.4px;}
     .brand p{margin:0; color:var(--muted); font-size:13px}
 
-    .actions{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+    .actions{display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-self:end;}
 
     .btn{
       border:none; cursor:pointer;
@@ -63,11 +110,12 @@
       background:#fff;
       box-shadow: 0 2px 10px rgba(0,0,0,.06);
       color:#111;
-      font-weight:600;
+      font-weight:700;
       transition:.15s transform ease, .15s opacity ease;
       display:inline-flex; align-items:center; gap:8px;
       white-space:nowrap;
       justify-content:center;
+      text-decoration:none;
     }
     .btn:active{transform:scale(.98)}
     .btn.primary{background:var(--brand); color:#fff}
@@ -75,6 +123,54 @@
     .btn.ghost{background:transparent; box-shadow:none; border:1px solid rgba(0,0,0,.10)}
     .btn:disabled{opacity:.65; cursor:not-allowed}
 
+    /* ✅ زر أيقونة فقط */
+    .icon-btn{
+      width:44px;
+      padding:10px 0;
+      display:inline-flex;
+      justify-content:center;
+      align-items:center;
+      font-size:18px;
+      line-height:1;
+    }
+
+    /* ✅ Social buttons */
+    .social-links{
+      justify-self:center;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .social-btn{
+      width:36px;
+      height:36px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:12px;
+      text-decoration:none;
+      transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+      border:1px solid rgba(0,0,0,.10);
+      box-shadow: 0 6px 16px rgba(0,0,0,.08);
+    }
+    .social-btn:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px rgba(0,0,0,.12);
+      opacity:.96;
+    }
+    .social-btn svg{ width:18px; height:18px; fill:#fff; }
+
+    .social-btn.fb{ background:#1877F2; }
+    .social-btn.ig{
+      background: radial-gradient(circle at 30% 110%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    }
+
+    html[data-theme="dark"] .social-btn{
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow:none;
+    }
+
+    /* ✅ شريط الحالة */
     .statusbar{
       display:flex;
       gap:10px;
@@ -115,7 +211,7 @@
       background:#fff;
       border:1px solid rgba(0,0,0,.08);
       cursor:pointer;
-      font-weight:700;
+      font-weight:800;
       color:#222;
       box-shadow: 0 2px 10px rgba(0,0,0,.04);
       user-select:none;
@@ -214,7 +310,7 @@
     }
 
     .form{margin-top:12px; display:grid; gap:10px;}
-    .field label{display:block; font-weight:800; font-size:13px; margin-bottom:6px}
+    .field label{display:block; font-weight:900; font-size:13px; margin-bottom:6px}
     .field input, .field textarea{
       width:100%;
       border:1px solid rgba(0,0,0,.12);
@@ -248,6 +344,19 @@
       .layout{grid-template-columns:1fr}
       .side{position:static}
     }
+
+    @media (max-width: 760px){
+      .topbar{
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+          "brand actions"
+          "social social";
+        row-gap:10px;
+      }
+      .brand{grid-area:brand; justify-self:start;}
+      .actions{grid-area:actions; justify-self:end;}
+      .social-links{grid-area:social; justify-self:center;}
+    }
   </style>
 </head>
 
@@ -265,8 +374,37 @@
           </div>
         </div>
 
+        <div class="social-links" aria-label="Social">
+          <a class="social-btn ig"
+             href="https://www.instagram.com/siymon7?igsh=Ync3dXN6MWQ2a2Vr"
+             target="_blank" rel="noopener"
+             aria-label="Instagram" title="Instagram">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9z"/>
+              <path d="M12 7.2A4.8 4.8 0 1 1 7.2 12 4.8 4.8 0 0 1 12 7.2zm0 2A2.8 2.8 0 1 0 14.8 12 2.8 2.8 0 0 0 12 9.2z"/>
+              <path d="M17.6 6.3a1.1 1.1 0 1 1-1.1 1.1 1.1 1.1 0 0 1 1.1-1.1z"/>
+            </svg>
+          </a>
+
+          <a class="social-btn fb"
+             href="https://www.facebook.com/share/1AV3nJV3dZ/"
+             target="_blank" rel="noopener"
+             aria-label="Facebook" title="Facebook">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M13.6 22v-8.2h2.8l.4-3H13.6V9.1c0-.9.3-1.6 1.7-1.6h1.5V5c-.3 0-1.4-.1-2.7-.1-2.7 0-4.6 1.6-4.6 4.6v1.9H7v3h2.5V22h4.1z"/>
+            </svg>
+          </a>
+        </div>
+
         <div class="actions">
           <button class="btn ghost" id="langToggle" type="button">EN</button>
+          <button class="btn ghost icon-btn" id="installBtn" type="button" title="Install" aria-label="Install" style="display:none">⬇️</button>
+          <button class="btn ghost icon-btn" id="themeToggle" type="button" title="Theme" aria-label="Theme">🌙</button>
+
+          <!-- ✅ زر وضع المشرف -->
+          <button class="btn ghost icon-btn" id="adminBtn" type="button" title="Admin" aria-label="Admin">Admin</button>
+
+          <a class="btn ghost icon-btn" id="supportCall" href="#" title="Support" aria-label="Support">📞</a>
           <button class="btn" id="clearCart" type="button">🧹 <span id="clearText">تفريغ السلة</span></button>
           <button class="btn primary" id="goCart" type="button">🛒 <span id="cartCount">0</span></button>
         </div>
@@ -299,20 +437,24 @@
             <span id="subTotalLabel">المجموع الفرعي</span>
             <span id="subTotalValue">0.00</span>
           </div>
-          <div class="totals-row">
+
+          <!-- ✅ رسوم التوصيل: تظهر فقط للمشرف -->
+          <div class="totals-row" id="deliveryRow" data-admin-only hidden>
             <span id="deliveryFeeLabel">رسوم التوصيل</span>
             <span id="deliveryFeeValue">0.00</span>
           </div>
+
           <div class="totals">
             <span id="totalLabel">الإجمالي</span>
             <span id="totalValue">0.00</span>
           </div>
 
           <div class="form">
-            <div class="field">
+            <!-- ✅ إدخال رسوم التوصيل: للمشرف فقط -->
+            <div class="field" id="deliveryFeeField" data-admin-only hidden>
               <label id="deliveryFeeInputLabel" for="deliveryFeeInput">قيمة رسوم التوصيل</label>
               <input id="deliveryFeeInput" type="number" min="0" step="1" placeholder="مثال: 10" />
-              <div class="hint" id="deliveryFeeHint">يمكنك تغييرها حسب المدينة/المسافة.</div>
+              <div class="hint" id="deliveryFeeHint">تتغير حسب المدينة او المسافة.</div>
             </div>
 
             <div class="field">
@@ -322,7 +464,7 @@
 
             <div class="field">
               <label id="phoneLabel" for="custPhone">رقم الهاتف</label>
-              <input id="custPhone" type="tel" placeholder="06xxxxxxxx" />
+              <input id="custPhone" type="tel" placeholder="06/07xxxxxxxx" />
             </div>
 
             <div class="field">
@@ -338,12 +480,15 @@
             <button class="btn ghost" id="getAddrBtn" type="button">📍 <span id="getAddrText">جلب العنوان</span></button>
             <div class="hint" id="locHint">قد يطلب المتصفح الإذن للوصول للموقع.</div>
 
-            <button class="btn ghost" id="printInvoice" type="button">🖨️ <span id="printText">طباعة الفاتورة</span></button>
-            <button class="btn ghost" id="btPrintInvoice" type="button">🧾📶 <span id="btPrintText">طباعة عبر البلوتوث</span></button>
+            <!-- ✅ الطباعة: للمشرف فقط -->
+            <button class="btn ghost" id="printInvoice" data-admin-only hidden type="button">🖨️ <span id="printText">طباعة الفاتورة</span></button>
+            <button class="btn ghost" id="btPrintInvoice" data-admin-only hidden type="button">🧾📶 <span id="btPrintText">طباعة عبر البلوتوث</span></button>
+            <div class="hint" id="btHint" data-admin-only hidden></div>
 
+            <!-- ✅ زر واحد: عند الزبون يرسل للمشرف، وعند المشرف يرسل للمكلف بالتوصيل -->
             <button class="btn good" id="sendWhatsApp" type="button">📲 <span id="sendText">إرسال الطلب عبر واتساب</span></button>
 
-            <div class="hint" id="closedHint" style="display:none;color:#b00;font-weight:800">
+            <div class="hint" id="closedHint" style="display:none;color:#b00;font-weight:900">
               المتجر مغلق حالياً. لا يمكن إرسال الطلب الآن.
             </div>
           </div>
@@ -359,46 +504,62 @@
   </footer>
 
   <script>
-    const WHATSAPP_NUMBER = "212600000000";
+    /***********************
+     * ✅ إعدادات الأرقام + المشرف
+     ***********************/
+    // رقم المشرف/المطعم (الزبون يرسل له)
+    const ADMIN_WHATSAPP_NUMBER   = "212617139424";
+
+    // رقم المكلف بالتوصيل (المشرف يرسل له)
+    const COURIER_WHATSAPP_NUMBER = "212629051769"; // ✅ بدلها برقم السائق
+
+    const SUPPORT_PHONE   = "+212617139424";
     const CURRENCY_AR = "درهم";
     const CURRENCY_EN = "MAD";
 
+    // ✅ كلمة سر المشرف (بدّلها)
+    const ADMIN_PASSWORD = "6789";
+    const ADMIN_LS_KEY   = "siymon_is_admin_v1";
+
     const DEFAULT_DELIVERY_FEE = 10;
 
-    // ✅ ساعات العمل: الأحد والاثنين فقط
-    // ملاحظة: 12:00 إلى 00:00 (يمتد لمنتصف الليل)
+    // ✅ ساعات العمل
     const BUSINESS = {
-      open:  { h: 12, m: 0 },
-      close: { h: 0,  m: 0 },
-      days:  [0, 1] // Sunday, Monday
+      open:  { h: 12, m: 0 },  // 12:00
+      close: { h: 0,  m: 0 },  // 00:00
+      days:  [0,1,2,3,4,5,6]
     };
 
     const i18n = {
       ar: {
         dir: "rtl",
-        title: "siymon | صفحة هبوط لطلب الطعام",
+        title: "siymon",
         subtitle: "اطلب أكلك المفضل بسرعة",
         cartTitle: "السلة",
         emptyCart: "السلة فارغة. أضف منتجات من القائمة 👇",
 
         openNow: "مفتوح الآن",
         closedNow: "مغلق الآن",
-        hoursText: "ساعات العمل: 12:00 إلى 00:00 — من الأحد إلى الإثنين",
+        hoursText: "ساعات العمل: 12:00 إلى 00:00 — طيلة أيام الأسبوع",
 
         subTotalLabel: "المجموع الفرعي",
         deliveryFeeLabel: "رسوم التوصيل",
         totalLabel: "الإجمالي",
+        totalNoDeliveryLabel: "الإجمالي (بدون توصيل)",
 
         deliveryFeeInputLabel: "قيمة رسوم التوصيل",
         deliveryFeePlaceholder: "مثال: 10",
-        deliveryFeeHint: "يمكنك تغييرها حسب المدينة/المسافة.",
+        deliveryFeeHint: "تتغير حسب المدينة او المسافة.",
 
         nameLabel: "الاسم",
         phoneLabel: "رقم الهاتف",
         addrLabel: "العنوان",
         notesLabel: "ملاحظات (اختياري)",
 
-        sendText: "إرسال الطلب عبر واتساب",
+        // ✅ نص الزر حسب الدور
+        sendAdminText: "إرسال الطلب للمطعم عبر واتساب",
+        sendCourierText: "إرسال الطلب للمكلف بالتوصيل",
+
         clearText: "تفريغ السلة",
         addBtn: "أضف للسلة",
         categoryAll: "الكل",
@@ -408,14 +569,6 @@
 
         printText: "طباعة الفاتورة",
         btPrintText: "طباعة عبر البلوتوث",
-        bt: {
-          unsupported: "الطباعة عبر البلوتوث غير مدعومة في هذا المتصفح.",
-          needHttps: "خاص الموقع يكون HTTPS باش يخدم Web Bluetooth.",
-          connecting: "جارٍ الاتصال بالطابعة...",
-          connected: "تم الاتصال بالطابعة ✅",
-          failed: "تعذر الاتصال بالطابعة.",
-          printed: "تم إرسال الفاتورة للطابعة ✅"
-        },
 
         geo: {
           unsupported: "المتصفح لا يدعم تحديد الموقع",
@@ -428,7 +581,7 @@
         validations: {
           needItems: "أضف منتجات للسلة أولاً.",
           needName: "اكتب اسمك من فضلك.",
-          needPhone: "رقم الهاتف إجباري.",
+          needPhone: "اكتب رقم الهاتف من فضلك.",
           needAddress: "اكتب العنوان من فضلك.",
           closed: "المتجر مغلق حالياً. لا يمكن إرسال الطلب الآن."
         },
@@ -443,24 +596,26 @@
           items: "الطلبات",
           subtotal: "المجموع الفرعي",
           deliveryFee: "رسوم التوصيل",
+          deliveryTbd: "يحددها المشرف",
           total: "الإجمالي",
           thanks: "شكراً لكم"
         }
       },
       en: {
         dir: "ltr",
-        title: "siymon | Food Ordering Landing Page",
+        title: "siymon | Food Ordering",
         subtitle: "Order your favorite food fast",
         cartTitle: "Cart",
         emptyCart: "Cart is empty. Add items from the list 👇",
 
         openNow: "Open now",
         closedNow: "Closed now",
-        hoursText: "Working hours: 12:00 → 00:00 — Sun to Mon",
+        hoursText: "Working hours: 12:00 → 00:00 — Every day",
 
         subTotalLabel: "Subtotal",
         deliveryFeeLabel: "Delivery fee",
         totalLabel: "Total",
+        totalNoDeliveryLabel: "Total (no delivery)",
 
         deliveryFeeInputLabel: "Delivery fee amount",
         deliveryFeePlaceholder: "e.g. 10",
@@ -471,7 +626,9 @@
         addrLabel: "Address",
         notesLabel: "Notes (optional)",
 
-        sendText: "Send order via WhatsApp",
+        sendAdminText: "Send order to restaurant (WhatsApp)",
+        sendCourierText: "Send to courier (WhatsApp)",
+
         clearText: "Clear cart",
         addBtn: "Add to cart",
         categoryAll: "All",
@@ -481,14 +638,6 @@
 
         printText: "Print invoice",
         btPrintText: "Print via Bluetooth",
-        bt: {
-          unsupported: "Bluetooth printing is not supported in this browser.",
-          needHttps: "Web Bluetooth requires HTTPS.",
-          connecting: "Connecting to printer...",
-          connected: "Printer connected ✅",
-          failed: "Couldn't connect to printer.",
-          printed: "Invoice sent to printer ✅"
-        },
 
         geo: {
           unsupported: "Geolocation is not supported by your browser.",
@@ -501,7 +650,7 @@
         validations: {
           needItems: "Please add items to the cart first.",
           needName: "Please enter your name.",
-          needPhone: "Phone number is required.",
+          needPhone: "Please enter your phone number.",
           needAddress: "Please enter your address.",
           closed: "We are currently closed. You can't place an order now."
         },
@@ -516,19 +665,23 @@
           items: "Items",
           subtotal: "Subtotal",
           deliveryFee: "Delivery fee",
+          deliveryTbd: "set by admin",
           total: "Total",
           thanks: "Thank you"
         }
       }
     };
 
+    /***********************
+     * products
+     ***********************/
     const products = [
-      { id:"m1", cat:"moroccan", catLabel:{ar:"مغربي", en:"Moroccan"}, price:35,
-        img:"https://images.unsplash.com/photo-1541518763669-27fef04b14ea?auto=format&fit=crop&w=900&q=70",
+      { id:"m1", cat:"moroccan", catLabel:{ar:"مغربي", en:"Moroccan"}, price:40,
+        img:"https://uploads.onecompiler.io/44avb35xn/44azkc7wy/Photoroom-20260120_003048_5.png",
         name:{ar:"طاجين دجاج", en:"Chicken Tagine"},
         desc:{ar:"طاجين دجاج بالليمون والزيتون", en:"Chicken tagine with lemon & olives"} },
-      { id:"m2", cat:"moroccan", price:25,
-        img:"https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=900&q=70",
+      { id:"m2", cat:"moroccan", price:45,
+        img:"https://uploads.onecompiler.io/44avb35xn/44azkc7wy/Photoroom-20260120_003048_7.png",
         name:{ar:"كسكس", en:"Couscous"},
         desc:{ar:"كسكس بالخضر والمرق", en:"Couscous with vegetables"} },
 
@@ -551,28 +704,48 @@
         desc:{ar:"قطع دجاج مقرمشة", en:"Crispy chicken bites"} },
 
       { id:"h1", cat:"indian", catLabel:{ar:"هندي", en:"Indian"}, price:55,
-        img:"https://images.unsplash.com/photo-1604908176997-125f25cc5002?auto=format&fit=crop&w=900&q=70",
+        img:"https://uploads.onecompiler.io/44avb35xn/44azkc7wy/Photoroom-20260120_003048_2.png",
         name:{ar:"دجاج تيكا ماسالا", en:"Chicken Tikka Masala"},
         desc:{ar:"صلصة متبلة وكريمية", en:"Spiced creamy sauce"} },
       { id:"h2", cat:"indian", price:20,
         img:"https://images.unsplash.com/photo-1625944522862-37c4f97e3b16?auto=format&fit=crop&w=900&q=70",
-        name:{ar:"نان", en:"Naan Bread"},
-        desc:{ar:"خبز هندي طري", en:"Soft Indian bread"} },
+        name:{ar:"برياني دجاج", en:"chicken bryani"},
+        desc:{ar:"ارز هندي طري", en:"Soft Indian ric"} },
 
-      { id:"s1", cat:"soda", catLabel:{ar:"مشروبات غازية", en:"Soda"}, price:10,
-        img:"https://images.unsplash.com/photo-1543253687-c931c8e01820?auto=format&fit=crop&w=900&q=70",
-        name:{ar:"مشروب غازي", en:"Soda"},
+      { id:"j1", cat:"water", price:3,
+        img:"https://images.unsplash.com/photo-1542444459-db63c3c0e3b4?auto=format&fit=crop&w=900&q=70",
+        name:{ ar:"عصير برتقال", en:"Orange Juice" },
+        desc:{ ar:"كاس عصير طبيعي", en:"Fresh orange juice" } },
+
+      { id:"s3", cat:"soda", price:8,
+        img:"https://uploads.onecompiler.io/44avb35xn/44azkc7wy/lkj%5Ehj%20(5).png",
+        name:{ ar:"فانتا", en:"fanta" },
+        desc:{ ar:"مشروب غازي 35ml", en:"soft drink" } },
+
+      { id:"s2", cat:"soda", price:8,
+        img:"https://uploads.onecompiler.io/44avb35xn/44azkc7wy/lkj%5Ehj%20(4).png",
+        name:{ ar:"سبريت", en:"Sprite" },
+        desc:{ ar:"مشروب غازي 35ml", en:"soft drink" } },
+
+      { id:"s1", cat:"soda", catLabel:{ar:"مشروبات غازية", en:"Soda"}, price:8,
+        img:"https://uploads.onecompiler.io/44avb35xn/44azkc7wy/lkj%5Ehj%20(8).png",
+        name:{ar:"كوكا كولا", en:"coca cola"},
         desc:{ar:"علبة 330ml", en:"Can 330ml"} },
 
       { id:"w1", cat:"water", catLabel:{ar:"مياه", en:"Water"}, price:6,
-        img:"https://images.unsplash.com/photo-1528825871115-3581a5387919?auto=format&fit=crop&w=900&q=70",
+        img:"https://uploads.onecompiler.io/44avb35xn/44azkc7wy/Photoroom-20260120_003048_1.png",
         name:{ar:"ماء معدني", en:"Mineral Water"},
         desc:{ar:"قارورة 500ml", en:"Bottle 500ml"} }
     ];
 
+    /***********************
+     * State + Elements
+     ***********************/
     let lang = "ar";
     let activeCat = "all";
     const cart = new Map();
+
+    let isAdmin = false;
 
     const el = (id) => document.getElementById(id);
 
@@ -590,6 +763,11 @@
     const hoursText = el("hoursText");
 
     const langToggle = el("langToggle");
+    const themeToggle = el("themeToggle");
+    const installBtn = el("installBtn");
+    const supportCall = el("supportCall");
+    const adminBtn = el("adminBtn");
+
     const clearCartBtn = el("clearCart");
     const goCartBtn = el("goCart");
     const sendBtn = el("sendWhatsApp");
@@ -599,6 +777,7 @@
 
     const printBtn = el("printInvoice");
     const btPrintBtn = el("btPrintInvoice");
+    const btHint = el("btHint");
 
     const closedHint = el("closedHint");
 
@@ -609,8 +788,84 @@
     const custAddr = el("custAddr");
     const custNotes = el("custNotes");
 
-    const LS_KEY = "siymon_cart_v4";
+    /***********************
+     * ✅ Admin mode helpers
+     ***********************/
+    function loadAdminState(){
+      isAdmin = localStorage.getItem(ADMIN_LS_KEY) === "1";
+    }
+    function setAdminState(v){
+      isAdmin = !!v;
+      localStorage.setItem(ADMIN_LS_KEY, isAdmin ? "1" : "0");
+      applyAdminUI();
+      renderAll();
+      saveCart();
+    }
+    function applyAdminUI(){
+      // إظهار/إخفاء عناصر المشرف
+      document.querySelectorAll("[data-admin-only]").forEach(node => {
+        node.hidden = !isAdmin;
+      });
 
+      // رسوم التوصيل: الزبون ما يقدرش يبدلها
+      if(!isAdmin){
+        deliveryFeeInput.value = "0";
+        deliveryFeeInput.disabled = true;
+      }else{
+        deliveryFeeInput.disabled = false;
+        if(!deliveryFeeInput.value) deliveryFeeInput.value = String(DEFAULT_DELIVERY_FEE);
+      }
+
+      // زر القفل: يبين الحالة
+      adminBtn.textContent = isAdmin ? "🔓" : "🔒";
+    }
+
+    adminBtn.addEventListener("click", ()=>{
+      if(isAdmin){
+        const ok = confirm(lang==="ar" ? "خروج من وضع المشرف؟" : "Logout admin mode?");
+        if(ok) setAdminState(false);
+        return;
+      }
+      const pass = prompt(lang==="ar" ? "أدخل كلمة سر المشرف:" : "Enter admin password:");
+      if(pass === null) return;
+      if(pass === ADMIN_PASSWORD){
+        setAdminState(true);
+      }else{
+        alert(lang==="ar" ? "كلمة السر غير صحيحة." : "Wrong password.");
+      }
+    });
+
+    /***********************
+     * ✅ Theme
+     ***********************/
+    const THEME_KEY = "siymon_theme_v2";
+    function applyTheme(theme){
+      if(theme === "dark"){
+        document.documentElement.setAttribute("data-theme", "dark");
+        themeToggle.textContent = "☀️";
+      }else{
+        document.documentElement.removeAttribute("data-theme");
+        themeToggle.textContent = "🌙";
+      }
+    }
+    function loadTheme(){
+      const saved = localStorage.getItem(THEME_KEY);
+      if(saved){ applyTheme(saved); return; }
+      const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      applyTheme(prefersDark ? "dark" : "light");
+    }
+    function toggleTheme(){
+      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      const next = isDark ? "light" : "dark";
+      localStorage.setItem(THEME_KEY, next);
+      applyTheme(next);
+    }
+    themeToggle.addEventListener("click", toggleTheme);
+
+    /***********************
+     * ✅ LocalStorage
+     ***********************/
+    const LS_KEY = "siymon_cart_v4";
     function saveCart(){
       const obj = {
         lang,
@@ -635,7 +890,6 @@
 
         if(obj?.lang) lang = obj.lang;
         if(obj?.activeCat) activeCat = obj.activeCat;
-
         if(typeof obj?.deliveryFee === "string") deliveryFeeInput.value = obj.deliveryFee;
 
         if(Array.isArray(obj?.items)){
@@ -654,13 +908,14 @@
       }catch(e){}
     }
 
+    /***********************
+     * Helpers
+     ***********************/
     function money(v){
       const num = Number(v || 0);
       return num.toFixed(2) + " " + (lang==="ar" ? CURRENCY_AR : CURRENCY_EN);
     }
-
     function getProduct(id){ return products.find(p => p.id === id); }
-
     function cartSubTotal(){
       let total = 0;
       for(const [id, qty] of cart.entries()){
@@ -669,31 +924,42 @@
       }
       return total;
     }
-
     function getDeliveryFee(){
       const n = Number(deliveryFeeInput.value || DEFAULT_DELIVERY_FEE || 0);
       return Number.isFinite(n) && n >= 0 ? n : 0;
     }
-
-    function cartGrandTotal(){
-      return cartSubTotal() + getDeliveryFee();
+    function effectiveDeliveryFee(){
+      // ✅ الزبون: 0 / المشرف: حسب الإدخال
+      return isAdmin ? getDeliveryFee() : 0;
     }
-
+    function cartGrandTotal(){ return cartSubTotal() + effectiveDeliveryFee(); }
     function cartItemsCount(){
       let c = 0;
       for(const qty of cart.values()) c += qty;
       return c;
     }
 
+    /***********************
+     * ✅ Business hours (FIXED 00:00 issue)
+     ***********************/
     function isBusinessOpen(now = new Date()){
       const day = now.getDay();
       const minutesNow = now.getHours()*60 + now.getMinutes();
 
-      const openMin  = BUSINESS.open.h*60  + BUSINESS.open.m;
-      const closeMin = BUSINESS.close.h*60 + BUSINESS.close.m;
-
-      const overnight = closeMin <= openMin;
       const isDayAllowed = (d) => BUSINESS.days.includes(d);
+
+      const openMin  = (BUSINESS.open.h*60)  + BUSINESS.open.m;
+      let closeMin   = (BUSINESS.close.h*60) + BUSINESS.close.m;
+
+      if(closeMin === 0 && openMin > 0){
+        closeMin = 24*60;
+      }
+
+      if(closeMin === openMin){
+        return isDayAllowed(day);
+      }
+
+      const overnight = closeMin < openMin;
 
       if(!overnight){
         return isDayAllowed(day) && minutesNow >= openMin && minutesNow < closeMin;
@@ -718,6 +984,9 @@
       closedHint.style.display = open ? "none" : "block";
     }
 
+    /***********************
+     * i18n apply
+     ***********************/
     function applyI18n(){
       document.documentElement.lang = lang;
       document.documentElement.dir = i18n[lang].dir;
@@ -727,9 +996,15 @@
 
       el("cartTitle").textContent = i18n[lang].cartTitle;
       el("subTotalLabel").textContent = i18n[lang].subTotalLabel;
-      el("deliveryFeeLabel").textContent = i18n[lang].deliveryFeeLabel;
-      el("totalLabel").textContent = i18n[lang].totalLabel;
 
+      // labels حسب الدور
+      el("totalLabel").textContent = isAdmin ? i18n[lang].totalLabel : i18n[lang].totalNoDeliveryLabel;
+
+      // زر الواتساب حسب الدور
+      el("sendText").textContent = isAdmin ? i18n[lang].sendCourierText : i18n[lang].sendAdminText;
+
+      // admin-only labels (إذا ظاهرين)
+      el("deliveryFeeLabel").textContent = i18n[lang].deliveryFeeLabel;
       el("deliveryFeeInputLabel").textContent = i18n[lang].deliveryFeeInputLabel;
       deliveryFeeInput.placeholder = i18n[lang].deliveryFeePlaceholder;
       el("deliveryFeeHint").textContent = i18n[lang].deliveryFeeHint;
@@ -739,12 +1014,11 @@
       el("addrLabel").textContent = i18n[lang].addrLabel;
       el("notesLabel").textContent = i18n[lang].notesLabel;
 
-      el("sendText").textContent = i18n[lang].sendText;
-      el("getAddrText").textContent = i18n[lang].getAddrText;
-      locHint.textContent = i18n[lang].locHint;
-
       el("printText").textContent = i18n[lang].printText;
       el("btPrintText").textContent = i18n[lang].btPrintText;
+
+      el("getAddrText").textContent = i18n[lang].getAddrText;
+      locHint.textContent = i18n[lang].locHint;
 
       el("clearText").textContent = i18n[lang].clearText;
       el("footerText").textContent = i18n[lang].footer;
@@ -752,13 +1026,18 @@
       langToggle.textContent = (lang === "ar") ? "EN" : "AR";
 
       custName.placeholder = (lang==="ar") ? "مثال: محمد" : "e.g. John";
-      custPhone.placeholder = (lang==="ar") ? "06xxxxxxxx" : "Phone number";
+      custPhone.placeholder = (lang==="ar") ? "06/07xxxxxxxx" : "Phone number";
       custAddr.placeholder = (lang==="ar") ? "المدينة، الحي..." : "City, street...";
       custNotes.placeholder = (lang==="ar") ? "بدون بصل، حار، ..." : "No onions, spicy, ...";
+
+      supportCall.setAttribute("href", "tel:" + SUPPORT_PHONE);
 
       updateOpenStatus();
     }
 
+    /***********************
+     * Categories auto
+     ***********************/
     function buildCategoriesFromProducts(){
       const map = new Map();
       for(const p of products){
@@ -805,11 +1084,10 @@
       filtered.forEach(p=>{
         const card = document.createElement("div");
         card.className = "card";
-
         card.innerHTML = `
           <div class="img">
             <img src="${p.img}" alt="${p.name[lang]}" loading="lazy"
-                 onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23eee%22/><text x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23999%22 font-family=%22Arial%22 font-size=%2220%22>Image</text></svg>';">
+              onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23eee%22/><text x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23999%22 font-family=%22Arial%22 font-size=%2220%22>Image</text></svg>';"/>
           </div>
           <h3>${p.name[lang]}</h3>
           <p>${p.desc[lang]}</p>
@@ -818,7 +1096,6 @@
           </div>
           <button class="btn primary add addBtn" data-id="${p.id}" type="button">➕ ${i18n[lang].addBtn}</button>
         `;
-
         productsGrid.appendChild(card);
       });
 
@@ -841,7 +1118,6 @@
           if(!p) continue;
 
           const subtotal = p.price * qty;
-
           const item = document.createElement("div");
           item.className = "cart-item";
           item.innerHTML = `
@@ -869,7 +1145,7 @@
       }
 
       const sub = cartSubTotal();
-      const fee = getDeliveryFee();
+      const fee = effectiveDeliveryFee();
       const grand = cartGrandTotal();
 
       subTotalValue.textContent = money(sub);
@@ -878,8 +1154,9 @@
 
       cartCount.textContent = String(cartItemsCount());
 
-      printBtn.disabled = (cart.size === 0);
-      btPrintBtn.disabled = (cart.size === 0);
+      // الطباعة محمية حتى لو حاول حد يناديها
+      printBtn.disabled = (cart.size === 0) || (!isAdmin);
+      btPrintBtn.disabled = (cart.size === 0) || (!isAdmin);
 
       updateOpenStatus();
     }
@@ -911,6 +1188,9 @@
       saveCart();
     }
 
+    /***********************
+     * Geolocation
+     ***********************/
     async function getLocation(){
       if(!navigator.geolocation){
         alert(i18n[lang].geo.unsupported);
@@ -928,10 +1208,7 @@
         try{
           const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
           const res = await fetch(url, {
-            headers: {
-              "Accept": "application/json",
-              "Accept-Language": (lang === "ar") ? "ar" : "en"
-            }
+            headers: { "Accept": "application/json", "Accept-Language": (lang === "ar") ? "ar" : "en" }
           });
           const data = await res.json();
           const display = (data && data.display_name) ? data.display_name : `Lat: ${lat}, Lng: ${lng}`;
@@ -954,31 +1231,23 @@
       }, { enableHighAccuracy:true, timeout:10000, maximumAge:0 });
     }
 
-    function validateOrderBasics(){
-      if(!isBusinessOpen(new Date())) return i18n[lang].validations.closed;
-
-      const name = custName.value.trim();
-      const phone = custPhone.value.trim();
-      const addr = custAddr.value.trim();
-
-      if(cart.size === 0) return i18n[lang].validations.needItems;
-      if(!name) return i18n[lang].validations.needName;
-      if(!phone) return i18n[lang].validations.needPhone;
-      if(!addr) return i18n[lang].validations.needAddress;
-
-      return null;
-    }
-
+    /***********************
+     * WhatsApp
+     ***********************/
     function buildWhatsAppMessage(){
-      const err = validateOrderBasics();
-      if(err) return { error: err };
-
       const tr = i18n[lang].msg;
 
-      const name = custName.value.trim();
+      if(!isBusinessOpen(new Date())) return { error: i18n[lang].validations.closed };
+
+      const name  = custName.value.trim();
       const phone = custPhone.value.trim();
-      const addr = custAddr.value.trim();
+      const addr  = custAddr.value.trim();
       const notes = custNotes.value.trim();
+
+      if(cart.size === 0) return { error: i18n[lang].validations.needItems };
+      if(!name)  return { error: i18n[lang].validations.needName };
+      if(!phone) return { error: i18n[lang].validations.needPhone };
+      if(!addr)  return { error: i18n[lang].validations.needAddress };
 
       const lines = [];
       lines.push(`🧾 ${tr.header}`);
@@ -998,12 +1267,19 @@
       }
 
       const sub = cartSubTotal();
-      const fee = getDeliveryFee();
+      const fee = effectiveDeliveryFee();
       const grand = cartGrandTotal();
 
       lines.push(`----------------------`);
       lines.push(`🧮 ${tr.subtotal}: ${money(sub)}`);
-      lines.push(`🚚 ${tr.deliveryFee}: ${money(fee)}`);
+
+      // ✅ الزبون: لا نعرض مبلغ التوصيل (يحدده المشرف)
+      if(isAdmin){
+        lines.push(`🚚 ${tr.deliveryFee}: ${money(fee)}`);
+      }else{
+        lines.push(`🚚 ${tr.deliveryFee}: ${tr.deliveryTbd}`);
+      }
+
       lines.push(`💰 ${tr.total}: ${money(grand)}`);
       lines.push(`🙏 ${tr.thanks}`);
 
@@ -1012,29 +1288,28 @@
 
     function sendToWhatsApp(){
       const msg = buildWhatsAppMessage();
-      if(msg.error){
-        alert(msg.error);
-        return;
-      }
-      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg.text)}`;
+      if(msg.error){ alert(msg.error); return; }
+
+      const number = isAdmin ? COURIER_WHATSAPP_NUMBER : ADMIN_WHATSAPP_NUMBER;
+      const url = `https://wa.me/${number}?text=${encodeURIComponent(msg.text)}`;
       window.open(url, "_blank");
     }
 
+    /***********************
+     * Print (popup) — ✅ Admin only
+     ***********************/
     function buildInvoiceHTML(){
-      const err = validateOrderBasics();
-      if(err) return { error: err };
-
       const tr = i18n[lang].msg;
       const now = new Date();
       const dateStr = now.toLocaleString(lang === "ar" ? "ar-MA" : "en-US");
 
-      const name = custName.value.trim();
+      const name  = custName.value.trim();
       const phone = custPhone.value.trim();
-      const addr = custAddr.value.trim();
+      const addr  = custAddr.value.trim();
       const notes = custNotes.value.trim();
 
       const sub = cartSubTotal();
-      const fee = getDeliveryFee();
+      const fee = effectiveDeliveryFee();
       const grand = cartGrandTotal();
 
       const rows = Array.from(cart.entries()).map(([id, qty])=>{
@@ -1051,7 +1326,7 @@
         `;
       }).join("");
 
-      const html = `
+      return `
 <!doctype html>
 <html lang="${lang}" dir="${i18n[lang].dir}">
 <head>
@@ -1060,8 +1335,6 @@
 <title>Invoice</title>
 <style>
   body{font-family:Arial, sans-serif; padding:20px; color:#111}
-  .head{display:flex; align-items:center; gap:12px}
-  .logo{width:54px;height:54px;border-radius:12px;background:#000;padding:6px;object-fit:contain}
   h1{margin:0;font-size:18px}
   .muted{color:#666;font-size:12px;margin-top:4px}
   table{width:100%;border-collapse:collapse;margin-top:14px}
@@ -1076,18 +1349,13 @@
 </style>
 </head>
 <body>
-  <div class="head">
-    <img class="logo" src="https://uploads.onecompiler.io/43xh82fwf/44atfud5t/Photoroom-20260117_132534545.png" alt="logo"/>
-    <div>
-      <h1>siymon</h1>
-      <div class="muted">${dateStr}</div>
-    </div>
-  </div>
+  <h1>siymon</h1>
+  <div class="muted">${dateStr}</div>
 
   <div class="box">
-    <div><b>${tr.customer}:</b> ${name}</div>
-    <div><b>${tr.phone}:</b> ${phone}</div>
-    <div><b>${tr.address}:</b> ${addr}</div>
+    <div><b>${tr.customer}:</b> ${name || "-"}</div>
+    <div><b>${tr.phone}:</b> ${phone || "-"}</div>
+    <div><b>${tr.address}:</b> ${addr || "-"}</div>
     <div><b>${tr.notes}:</b> ${notes || "-"}</div>
   </div>
 
@@ -1113,212 +1381,57 @@
 </body>
 </html>
       `.trim();
-
-      return { html };
     }
 
     function printInvoice(){
-      const res = buildInvoiceHTML();
-      if(res.error){
-        alert(res.error);
+      if(!isAdmin){
+        alert(lang==="ar" ? "الطباعة متاحة للمشرف فقط." : "Printing is admin-only.");
         return;
       }
+      if(cart.size === 0){ alert(i18n[lang].validations.needItems); return; }
+      const html = buildInvoiceHTML();
       const w = window.open("", "_blank");
       if(!w){
-        alert(lang==="ar" ? "المتصفح منع نافذة الطباعة." : "Popup blocked.");
+        alert(lang==="ar" ? "المتصفح منع نافذة الطباعة. اسمح بالنوافذ المنبثقة." : "Popup blocked. Please allow popups.");
         return;
       }
       w.document.open();
-      w.document.write(res.html);
+      w.document.write(html);
       w.document.close();
     }
 
-    let printerChar = null;
+    /***********************
+     * PWA Install
+     ***********************/
+    let deferredPrompt = null;
+    function isIOS(){ return /iphone|ipad|ipod/i.test(navigator.userAgent); }
 
-    function buildInvoiceTextPlain(){
-      const err = validateOrderBasics();
-      if(err) return { error: err };
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = "inline-flex";
+    });
 
-      const tr = i18n[lang].msg;
-      const now = new Date();
-      const dateStr = now.toLocaleString(lang === "ar" ? "ar-MA" : "en-US");
-
-      const name = custName.value.trim();
-      const phone = custPhone.value.trim();
-      const addr = custAddr.value.trim();
-      const notes = custNotes.value.trim();
-
-      const sub = cartSubTotal();
-      const fee = getDeliveryFee();
-      const grand = cartGrandTotal();
-
-      const lines = [];
-      lines.push("siymon");
-      lines.push(dateStr);
-      lines.push("------------------------------");
-      lines.push(`${tr.customer}: ${name}`);
-      lines.push(`${tr.phone}: ${phone}`);
-      lines.push(`${tr.address}: ${addr}`);
-      if(notes) lines.push(`${tr.notes}: ${notes}`);
-      lines.push("------------------------------");
-      lines.push(tr.items + ":");
-
-      for(const [id, qty] of cart.entries()){
-        const p = getProduct(id);
-        if(!p) continue;
-        const lineTotal = p.price * qty;
-        lines.push(`- ${p.name[lang]} x ${qty} = ${money(lineTotal)}`);
+    installBtn.addEventListener("click", async () => {
+      if(!deferredPrompt){
+        if(isIOS()) alert(lang==="ar" ? "في iPhone: اضغط زر المشاركة ثم (Add to Home Screen)." : "On iPhone: tap Share then Add to Home Screen.");
+        return;
       }
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      installBtn.style.display = "none";
+    });
 
-      lines.push("------------------------------");
-      lines.push(`${tr.subtotal}: ${money(sub)}`);
-      lines.push(`${tr.deliveryFee}: ${money(fee)}`);
-      lines.push(`${tr.total}: ${money(grand)}`);
-      lines.push("------------------------------");
-      lines.push(tr.thanks);
-      lines.push("\n\n\n");
-
-      return { text: lines.join("\n") };
-    }
-
-    function escposBytes(text){
-      const enc = new TextEncoder();
-      const init = new Uint8Array([0x1B,0x40]);
-      const alignCenter = new Uint8Array([0x1B,0x61,0x01]);
-      const alignLeft = new Uint8Array([0x1B,0x61,0x00]);
-      const boldOn = new Uint8Array([0x1B,0x45,0x01]);
-      const boldOff = new Uint8Array([0x1B,0x45,0x00]);
-      const cut = new Uint8Array([0x1D,0x56,0x01,0x00]);
-
-      const parts = [];
-      parts.push(init);
-      parts.push(alignCenter);
-      parts.push(boldOn);
-      parts.push(enc.encode("siymon\n"));
-      parts.push(boldOff);
-      parts.push(alignLeft);
-      parts.push(enc.encode(text));
-      parts.push(cut);
-
-      let totalLen = 0;
-      for(const p of parts) totalLen += p.length;
-
-      const out = new Uint8Array(totalLen);
-      let offset = 0;
-      for(const p of parts){
-        out.set(p, offset);
-        offset += p.length;
-      }
-      return out;
-    }
-
-    async function writeChunks(characteristic, data){
-      const chunkSize = 180;
-      for(let i=0;i<data.length;i+=chunkSize){
-        const chunk = data.slice(i, i+chunkSize);
-        if(characteristic.writeValueWithoutResponse){
-          await characteristic.writeValueWithoutResponse(chunk);
-        }else{
-          await characteristic.writeValue(chunk);
-        }
-        await new Promise(r=>setTimeout(r, 30));
-      }
-    }
-
-    async function connectBluetoothPrinter(){
-      if(!("bluetooth" in navigator)){
-        throw new Error("UNSUPPORTED");
-      }
-      if(location.protocol !== "https:" && location.hostname !== "localhost"){
-        throw new Error("NEED_HTTPS");
-      }
-
-      const knownServices = [
-        "0000ffe0-0000-1000-8000-00805f9b34fb",
-        "0000ff00-0000-1000-8000-00805f9b34fb",
-        "49535343-fe7d-4ae5-8fa9-9fafd205e455"
-      ];
-
-      const device = await navigator.bluetooth.requestDevice({
-        acceptAllDevices: true,
-        optionalServices: knownServices
+    if("serviceWorker" in navigator){
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js").catch(()=>{});
       });
-
-      const server = await device.gatt.connect();
-
-      const tryService = async (svcUuid) => {
-        try{
-          const svc = await server.getPrimaryService(svcUuid);
-          const chars = await svc.getCharacteristics();
-          for(const ch of chars){
-            if(ch.properties.write || ch.properties.writeWithoutResponse) return ch;
-          }
-        }catch(e){}
-        return null;
-      };
-
-      for(const svc of knownServices){
-        const ch = await tryService(svc);
-        if(ch) return ch;
-      }
-
-      const services = await server.getPrimaryServices();
-      for(const svc of services){
-        const chars = await svc.getCharacteristics();
-        for(const ch of chars){
-          if(ch.properties.write || ch.properties.writeWithoutResponse) return ch;
-        }
-      }
-
-      throw new Error("NO_WRITABLE_CHAR");
     }
 
-    async function btPrintInvoice(){
-      const inv = buildInvoiceTextPlain();
-      if(inv.error){
-        alert(inv.error);
-        return;
-      }
-
-      try{
-        btPrintBtn.disabled = true;
-        const old = el("btPrintText").textContent;
-        el("btPrintText").textContent = i18n[lang].bt.connecting;
-
-        if(!printerChar){
-          printerChar = await connectBluetoothPrinter();
-          // لا نعرض أي جملة إضافية هنا
-        }
-
-        const bytes = escposBytes(inv.text);
-        await writeChunks(printerChar, bytes);
-
-        el("btPrintText").textContent = old;
-        btPrintBtn.disabled = false;
-      }catch(err){
-        btPrintBtn.disabled = false;
-        el("btPrintText").textContent = i18n[lang].btPrintText;
-
-        if(String(err?.message || err) === "UNSUPPORTED"){
-          alert(i18n[lang].bt.unsupported);
-        }else if(String(err?.message || err) === "NEED_HTTPS"){
-          alert(i18n[lang].bt.needHttps);
-        }else{
-          alert(i18n[lang].bt.failed);
-        }
-      }
-    }
-
-    function sendToWhatsApp(){
-      const msg = buildWhatsAppMessage();
-      if(msg.error){
-        alert(msg.error);
-        return;
-      }
-      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg.text)}`;
-      window.open(url, "_blank");
-    }
-
+    /***********************
+     * Events
+     ***********************/
     langToggle.addEventListener("click", ()=>{
       lang = (lang === "ar") ? "en" : "ar";
       renderAll();
@@ -1334,7 +1447,6 @@
     sendBtn.addEventListener("click", sendToWhatsApp);
     getAddrBtn.addEventListener("click", getLocation);
     printBtn.addEventListener("click", printInvoice);
-    btPrintBtn.addEventListener("click", btPrintInvoice);
 
     deliveryFeeInput.addEventListener("input", ()=>{
       renderCart();
@@ -1345,8 +1457,17 @@
       input.addEventListener("input", ()=> saveCart());
     });
 
+    /***********************
+     * Init
+     ***********************/
+    loadAdminState();
     loadCart();
-    if(!deliveryFeeInput.value) deliveryFeeInput.value = String(DEFAULT_DELIVERY_FEE);
+
+    loadTheme();
+    applyAdminUI();
+
+    // إذا كان مشرف: ضع افتراضي رسوم التوصيل
+    if(isAdmin && !deliveryFeeInput.value) deliveryFeeInput.value = String(DEFAULT_DELIVERY_FEE);
 
     renderAll();
     setInterval(()=> updateOpenStatus(), 60_000);
